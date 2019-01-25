@@ -71,8 +71,8 @@ import java.util.function.Predicate;
 public class Solution {
 
     public static Result analyze(List<Person> persons, List<PhoneCode> phoneCodesList) {
+
         Collection<CatalogEntry> catalog;
-        Collection<CatalogEntry> regionRyazanCatalog = new ArrayList<>();
         /**
          * 1. Формируем справочник абонентов.
          */
@@ -101,11 +101,12 @@ public class Solution {
         /**
          * 2. Фильтрация записей в каталоге
          */
+        Collection<CatalogEntry> regionRyazanCatalog = new ArrayList<>();
         Utils.filter(catalog, new Predicate<CatalogEntry>() {
             String rzn = "Рязанская область";
             @Override
             public boolean test(CatalogEntry catalogEntry) {
-                String s = catalogEntry.getRegion();
+
                 if(Objects.equals(catalogEntry.getRegion(), rzn)) {
                     regionRyazanCatalog.add(catalogEntry);
                     return true;
@@ -115,6 +116,45 @@ public class Solution {
 
         });
 
-        return new Result();
+        /**
+         * 3. Подсчет абонентов пенсионеров
+         */
+          int pensioners = Utils.count(regionRyazanCatalog, new Predicate<CatalogEntry>() {
+            @Override
+            public boolean test(CatalogEntry catalogEntry) {
+                if(catalogEntry.getPerson().getAge() >= 70)
+                    return true;
+                return false;
+            }
+        });
+
+        /**
+         * 4. Фильтр по городу
+         */
+        Collection<CatalogEntry> cityRyazanCatalog = new ArrayList<>();
+        Utils.filter(regionRyazanCatalog, new Predicate<CatalogEntry>() {
+            String rzn = "Рязань";
+            @Override
+            public boolean test(CatalogEntry catalogEntry) {
+                String s = catalogEntry.getCity();
+                if(Objects.equals(catalogEntry.getCity(), rzn)) {
+                    cityRyazanCatalog.add(catalogEntry);
+                    return true;
+                }
+                return false;
+            }
+
+        });
+        /**
+         * 5. Проверка наличия модельеров в Рязани
+         */
+        boolean hasFasionDesigners = Utils.contains(cityRyazanCatalog, new Predicate<CatalogEntry>() {
+            @Override
+            public boolean test(CatalogEntry catalogEntry) {
+                if(catalogEntry.getPerson().getProfession().equals("Модельер")) return true;
+                return false;
+            }
+        });
+        return new Result(regionRyazanCatalog.size(),cityRyazanCatalog.size(),pensioners,hasFasionDesigners);
     }
 }
