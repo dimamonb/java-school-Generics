@@ -104,10 +104,11 @@ public class Solution {
         Collection<CatalogEntry> regionRyazanCatalog = new ArrayList<>();
         Utils.filter(catalog, new Predicate<CatalogEntry>() {
             String rzn = "Рязанская область";
+
             @Override
             public boolean test(CatalogEntry catalogEntry) {
 
-                if(Objects.equals(catalogEntry.getRegion(), rzn)) {
+                if (Objects.equals(catalogEntry.getRegion(), rzn)) {
                     regionRyazanCatalog.add(catalogEntry);
                     return true;
                 }
@@ -119,10 +120,10 @@ public class Solution {
         /**
          * 3. Подсчет абонентов пенсионеров
          */
-          int pensioners = Utils.count(regionRyazanCatalog, new Predicate<CatalogEntry>() {
+        int pensioners = Utils.count(regionRyazanCatalog, new Predicate<CatalogEntry>() {
             @Override
             public boolean test(CatalogEntry catalogEntry) {
-                if(catalogEntry.getPerson().getAge() >= 70)
+                if (catalogEntry.getPerson().getAge() >= 70)
                     return true;
                 return false;
             }
@@ -134,10 +135,11 @@ public class Solution {
         Collection<CatalogEntry> cityRyazanCatalog = new ArrayList<>();
         Utils.filter(regionRyazanCatalog, new Predicate<CatalogEntry>() {
             String rzn = "Рязань";
+
             @Override
             public boolean test(CatalogEntry catalogEntry) {
                 String s = catalogEntry.getCity();
-                if(Objects.equals(catalogEntry.getCity(), rzn)) {
+                if (Objects.equals(catalogEntry.getCity(), rzn)) {
                     cityRyazanCatalog.add(catalogEntry);
                     return true;
                 }
@@ -151,10 +153,11 @@ public class Solution {
         boolean hasFasionDesigners = Utils.contains(cityRyazanCatalog, new Predicate<CatalogEntry>() {
             @Override
             public boolean test(CatalogEntry catalogEntry) {
-                if(catalogEntry.getPerson().getProfession().equals("Модельер")) return true;
+                if (catalogEntry.getPerson().getProfession().equals("Модельер")) return true;
                 return false;
             }
         });
-        return new Result(regionRyazanCatalog.size(),cityRyazanCatalog.size(),pensioners,hasFasionDesigners);
+
+        return new Result(regionRyazanCatalog.size(), cityRyazanCatalog.size(), pensioners, hasFasionDesigners);
     }
 }
