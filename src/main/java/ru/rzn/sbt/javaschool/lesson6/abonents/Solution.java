@@ -71,11 +71,12 @@ import java.util.function.Predicate;
 public class Solution {
 
     public static Result analyze(List<Person> persons, List<PhoneCode> phoneCodesList) {
-        Collection<CatalogEntry> catalog = new ArrayList<>();
+        Collection<CatalogEntry> catalog;
+        Collection<CatalogEntry> regionRyazanCatalog = new ArrayList<>();
         /**
          * 1. Формируем справочник абонентов.
          */
-        Utils.transform(persons, new Function<Person, CatalogEntry>() {
+        catalog = Utils.transform(persons, new Function<Person, CatalogEntry>() {
             @Override
             public CatalogEntry apply(Person person) {
                 StringBuilder city = new StringBuilder();
@@ -96,6 +97,24 @@ public class Solution {
                 return new CatalogEntry(person, city.toString(), region.toString());
             }
         });
+
+        /**
+         * 2. Фильтрация записей в каталоге
+         */
+        Utils.filter(catalog, new Predicate<CatalogEntry>() {
+            String rzn = "Рязанская область";
+            @Override
+            public boolean test(CatalogEntry catalogEntry) {
+                String s = catalogEntry.getRegion();
+                if(Objects.equals(catalogEntry.getRegion(), rzn)) {
+                    regionRyazanCatalog.add(catalogEntry);
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
         return new Result();
     }
 }

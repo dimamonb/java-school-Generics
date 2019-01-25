@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Utils {
 
@@ -13,5 +14,13 @@ public class Utils {
             result.add(function.apply(item));
         }
         return result ;
+    }
+
+    public static <T> Collection<T> filter(Collection<T> src, Predicate<T> predicate){
+
+        for(T item: src){
+            predicate.test(item);
+        }
+        return src;
     }
 }
